@@ -78,9 +78,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       } else {
         setError('Invalid Last 6 Digits or Password');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Login error:", err);
-      setError('Failed to sign in. Please try again.');
+      if (err.code === 'permission-denied') {
+        setError('Connection error: Please try again in a moment.');
+      } else {
+        setError('Failed to sign in. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -88,9 +92,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const handleDemoLogin = (role: 'staff' | 'manager' | 'admin') => {
     const demoUsers: Record<string, User> = {
-      admin: { name: 'Demo Admin', contact: '0000000001', email: 'admin@demo.com', role: 'admin' },
-      manager: { name: 'Demo Manager', contact: '0000000002', email: 'manager@demo.com', role: 'manager' },
-      staff: { name: 'Demo Staff', contact: '0000000003', email: 'staff@demo.com', role: 'staff' }
+      admin: { name: 'Demo Admin', contact: '0000000001', email: 'admin@demo.com', role: 'admin', password: 'password' },
+      manager: { name: 'Demo Manager', contact: '0000000002', email: 'manager@demo.com', role: 'manager', password: 'password' },
+      staff: { name: 'Demo Staff', contact: '0000000003', email: 'staff@demo.com', role: 'staff', password: 'password' }
     };
     onLogin(demoUsers[role]);
   };
@@ -144,6 +148,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
             <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-slate-400">Or use credentials</span></div>
           </div>
+
+          {!isSignup && (
+            <div className="mb-6 p-3 bg-indigo-50 border border-indigo-100 rounded-lg">
+              <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1">Demo Credentials</p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-indigo-800">
+                <div>Admin: <strong>000001</strong></div>
+                <div>Manager: <strong>000002</strong></div>
+                <div>Staff: <strong>000003</strong></div>
+                <div>Password: <strong>password</strong></div>
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className={`mb-4 p-3 text-sm rounded-lg border ${error.includes('created') ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
