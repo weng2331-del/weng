@@ -1,0 +1,7 @@
+{
+  "name": "Inventory Management",
+  "description": "A comprehensive inventory management system for Men, Lady, Boy, Girl, Shoe, Craft, and Book categories, featuring professional reporting and admin controls.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
